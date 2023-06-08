@@ -3,7 +3,7 @@
 using std::string;
 
 Editor::Editor(const set<string> & conectivos) {
-    /* Completar */
+    _conectivos = conectivos;
 }
 
 string Editor::texto() const {
@@ -18,7 +18,7 @@ const set<string>& Editor::vocabulario() const {
 
 const set<string>& Editor::conectivos() const {
     /* Quitar este código y completar */
-    return set_string_vacio;
+    return _conectivos;
 }
 
 int Editor::conteo_palabras() const { 

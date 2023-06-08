@@ -49,6 +49,8 @@ private:
     // conjuntos vacíos para devolver por referncia
     const set<int> set_int_vacio;
     const set<string> set_string_vacio;
+
+    set<string> _conectivos;
     
 };
 
