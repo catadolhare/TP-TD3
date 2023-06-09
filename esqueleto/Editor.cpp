@@ -55,7 +55,7 @@ void Editor::borrar_posicion(int pos) {
     //mover todas las palabras a la izquierda de pos un pos a la derecha, dejando la palabra de pos al final y hacer ´pop_back
     _vocabulario.erase(palabra);
     _longitud = _longitud - 1;
-    if(_conectores.count(palabra) == 0){
+    if(_conectivos.count(palabra) == 0){
         _cantidad_palabras = _cantidad_palabras - 1;
     }
 }
