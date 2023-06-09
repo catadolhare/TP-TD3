@@ -8,8 +8,11 @@ Editor::Editor(const set<string> & conectivos) {
 }
 
 string Editor::texto() const {
-    /* Quitar este código y completar */
-    return _texto;
+    string texto_completo;
+    for(int i=0; i<_texto.size(); i++){
+        texto_completo.append(_texto[i]);
+    }
+    return texto_completo;
 }
 
 const set<string>& Editor::vocabulario() const {
@@ -38,6 +41,7 @@ void Editor::agregar_atras(const string& oracion) {
 
 const set<int> & Editor::buscar_palabra(const string& palabra) const {
     /* Quitar este código y completar */
+
     return set_int_vacio;
 }
 
@@ -46,7 +50,14 @@ void Editor::insertar_palabras(const string& oracion, int pos) {
 }
 
 void Editor::borrar_posicion(int pos) {
-    /* Completar */
+    string palabra = _texto[pos];
+    //faltaria borrar la palabra de texto
+    //mover todas las palabras a la izquierda de pos un pos a la derecha, dejando la palabra de pos al final y hacer ´pop_back
+    _vocabulario.erase(palabra);
+    _longitud = _longitud - 1;
+    if(_conectores.count(palabra) == 0){
+        _cantidad_palabras = _cantidad_palabras - 1;
+    }
 }
 
 int Editor::borrar_palabra(const string& palabra) {
