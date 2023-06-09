@@ -4,16 +4,17 @@ using std::string;
 
 Editor::Editor(const set<string> & conectivos) {
     _conectivos = conectivos;
+    //recorrer con iterador
 }
 
 string Editor::texto() const {
     /* Quitar este código y completar */
-    return "";
+    return _texto;
 }
 
 const set<string>& Editor::vocabulario() const {
     /* Quitar este código y completar */
-    return set_string_vacio;
+    return _vocabulario;
 }
 
 const set<string>& Editor::conectivos() const {
@@ -23,12 +24,12 @@ const set<string>& Editor::conectivos() const {
 
 int Editor::conteo_palabras() const { 
     /* Quitar este código y completar */
-	return 0; 
+	return _cantidad_palabras; 
 }
 
 int Editor::longitud() const { 
     /* Quitar este código y completar */
-	return 0; 
+	return _longitud; 
 }
 
 void Editor::agregar_atras(const string& oracion) {

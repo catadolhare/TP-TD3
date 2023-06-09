@@ -51,6 +51,10 @@ private:
     const set<string> set_string_vacio;
 
     set<string> _conectivos;
+    string _texto;
+    set<string> _vocabulario;
+    int _cantidad_palabras;
+    int _longitud;
     
 };
 
