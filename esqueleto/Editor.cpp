@@ -63,8 +63,22 @@ void Editor::borrar_posicion(int pos) {
 }
 
 int Editor::borrar_palabra(const string& palabra) {
-    /* Quitar este código y completar */
-    return 0;
+    int cantidad_borradas = 0;
+    for(int i=0; i<_texto.size(); i++){
+        if(_texto[i] == palabra){
+            for(int j=i; j<_texto.size(); j++){
+                swap(_texto[j], _texto[j+1]);
+            }
+            _texto.pop_back();
+            cantidad_borradas++;
+        }
+    }
+    _vocabulario.erase(palabra);
+    _longitud = _longitud - cantidad_borradas;
+    if(_conectivos.count(palabra) == 0){
+        _cantidad_palabras = _cantidad_palabras - cantidad_borradas;
+    }
+    return cantidad_borradas;
 }
 
 void Editor::reemplazar_palabra(const string& palabra1, const string& palabra2) {
