@@ -49,6 +49,10 @@ void Editor::insertar_palabras(const string& oracion, int pos) {
 
 void Editor::borrar_posicion(int pos) {
     string palabra = _texto[pos];
+    for(int i=pos; i<_texto.size()-1; i++){
+        swap(_texto[i], _texto[i+1]);
+    }
+    _texto.pop_back();
     //faltaria borrar la palabra de texto
     //mover todas las palabras a la izquierda de pos un pos a la derecha, dejando la palabra de pos al final y hacer ´pop_back
     _vocabulario.erase(palabra);
