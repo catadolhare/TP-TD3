@@ -45,6 +45,24 @@ const set<int> & Editor::buscar_palabra(const string& palabra) const {
 
 void Editor::insertar_palabras(const string& oracion, int pos) {
     /* Completar */
+    /*vector<string> aux ={};
+    string palabra;
+    int i=0;
+    while(i<oracion.size()){
+        if(oracion[i] != ' '){
+            palabra[i] = oracion[i]; //chequear
+        } else {
+            aux.append(palabra); //chequear
+        }
+        i++;
+    }*/
+    int largo_anterior = _texto.size();
+    agregar_atras(oracion);
+    int largo_oracion = _texto.size() - largo_anterior;
+    for(int i=pos; i<_texto.size() - largo_oracion; i++){
+        swap(_texto[i], _texto[_texto.size() - largo_oracion+i]);
+    }
+    
 }
 
 void Editor::borrar_posicion(int pos) {
