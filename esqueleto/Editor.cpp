@@ -12,7 +12,7 @@ string Editor::texto() const {
     string texto_completo;
     for(int i=0; i<_texto.size(); i++){
         texto_completo.append(_texto[i]);
-        //si se guardan las palabras sin espacio, agregar un append de un espacio para que quede coherente texto
+        texto_completo.append(" ");
     }
     return texto_completo;
 }
