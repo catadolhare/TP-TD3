@@ -3,8 +3,9 @@
 using std::string;
 
 Editor::Editor(const set<string> & conectivos) {
-    _conectivos = conectivos;
-    //recorrer con iterador
+    for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){
+        _conectivos.insert(*it);
+    }
 }
 
 string Editor::texto() const {
