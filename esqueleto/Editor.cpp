@@ -12,27 +12,24 @@ string Editor::texto() const {
     string texto_completo;
     for(int i=0; i<_texto.size(); i++){
         texto_completo.append(_texto[i]);
+        //si se guardan las palabras sin espacio, agregar un append de un espacio para que quede coherente texto
     }
     return texto_completo;
 }
 
 const set<string>& Editor::vocabulario() const {
-    /* Quitar este código y completar */
     return _vocabulario;
 }
 
 const set<string>& Editor::conectivos() const {
-    /* Quitar este código y completar */
     return _conectivos;
 }
 
 int Editor::conteo_palabras() const { 
-    /* Quitar este código y completar */
 	return _cantidad_palabras; 
 }
 
 int Editor::longitud() const { 
-    /* Quitar este código y completar */
 	return _longitud; 
 }
 
