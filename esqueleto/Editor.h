@@ -4,6 +4,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <map>
 /* agregar includes que sean necesarios */
 
 using namespace std;
@@ -56,6 +57,7 @@ private:
     set<string> _vocabulario;
     int _cantidad_palabras;
     int _longitud;
+    map<string, set<int>> _posiciones_palabras;
     
 };
 

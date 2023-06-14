@@ -6,6 +6,11 @@ Editor::Editor(const set<string> & conectivos) {
     for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){
         _conectivos.insert(*it);
     }
+    _texto = {};
+    _vocabulario = {};
+    _cantidad_palabras = 0;
+    _longitud = 0;
+    _posiciones_palabras = {};
 }
 
 string Editor::texto() const {
@@ -38,9 +43,7 @@ void Editor::agregar_atras(const string& oracion) {
 }
 
 const set<int> & Editor::buscar_palabra(const string& palabra) const {
-    /* Quitar este código y completar */
-
-    return set_int_vacio;
+    //devolver el map que tenga esa palabra
 }
 
 void Editor::insertar_palabras(const string& oracion, int pos) {
@@ -62,6 +65,7 @@ void Editor::insertar_palabras(const string& oracion, int pos) {
     for(int i=pos; i<_texto.size() - largo_oracion; i++){
         swap(_texto[i], _texto[_texto.size() - largo_oracion+i]);
     }
+    //falta modificar longitud, conteo de palabras, vocabulario
     
 }
 
