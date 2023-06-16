@@ -47,17 +47,25 @@ public:
     void reemplazar_palabra(const string& palabra, const string& reemplazo);    // O(log M + P * log(P))
 
 private:
-    /* Completar */
-    // conjuntos vacíos para devolver por referncia
-    const set<int> set_int_vacio;
-    const set<string> set_string_vacio;
-
     set<string> _conectivos;
     vector<string> _texto;
     set<string> _vocabulario;
     int _cantidad_palabras;
     int _longitud;
     map<string, set<int>> _posiciones_palabras;
+
+    //Invariante de Representacion:
+    //  -_texto son strings solo con letras del alfabeto
+    //  -_cantidad_palabras mayor o igual a cero
+    //  -_longitud igual al tamaño de _texto
+    //  -la clave de _posiciones_palabras (string) tiene que pertencer a _texto
+    //  -los valores en el set de _posiciones_palabras son numeros entre 0 y _longitud-1
+    //  -relaciones entre texto conectivos y vocabulario
+
+    //Rep(e:estr) = 
+    // _cantidad_palabras >= 0
+    // _longitud >= 0
+    // (for all)(int i)(0<=i<|_posiciones_palabras|)=>e._posiciones_palabras[i]
     
 };
 
