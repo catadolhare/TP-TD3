@@ -5,40 +5,40 @@ using namespace std;
 using std::string;
 
 Editor::Editor(const set<string> & conectivos) {
-    for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){
-        _conectivos.insert(*it);
+    for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){ //|conectivos| iteraciones
+        _conectivos.insert(*it); //O(log n)
     }
-    _texto = {};
-    _vocabulario = {};
-    _cantidad_palabras = 0;
-    _longitud = 0;
-    _posiciones_palabras = {};
+    _texto = {}; //O(1)
+    _vocabulario = {}; //O(1)
+    _cantidad_palabras = 0; //O(1)
+    _longitud = 0; //O(1)
+    _posiciones_palabras = {}; //O(1)
 }
 
 string Editor::texto() const {
-    string texto_completo = "";
+    string texto_completo = ""; //O(1)
     for(int i=0; i<_texto.size()-1; i++){
         texto_completo.append(_texto[i]);
         texto_completo.append(" ");
     }
     texto_completo.append(_texto[_texto.size()-1]);
-    return texto_completo;
+    return texto_completo; //O(1)
 }
 
 const set<string>& Editor::vocabulario() const {
-    return _vocabulario;
+    return _vocabulario; //O(1)
 }
 
 const set<string>& Editor::conectivos() const {
-    return _conectivos;
+    return _conectivos; //O(1)
 }
 
 int Editor::conteo_palabras() const { 
-	return _cantidad_palabras; 
+	return _cantidad_palabras; //O(1)
 }
 
 int Editor::longitud() const { 
-	return _longitud; 
+	return _longitud; //O(1)
 }
 
 void Editor::agregar_atras(const string& oracion) {
@@ -84,14 +84,11 @@ void Editor::insertar_palabras(const string& oracion, int pos) {
         _posiciones_palabras[_texto[_longitud - largo_oracion+i]].erase(_longitud - largo_oracion+i);
         swap(_texto[pos+i], _texto[_longitud - largo_oracion+i]); //O(1)
         //_posiciones_palabras[_texto[pos+i]].insert(pos+i);
-        //_posiciones_palabras[_texto[_longitud - largo_oracion+i]].inert(_longitud - largo_oracion+i);
+        //_posiciones_palabras[_texto[_longitud - largo_oracion+i]].insert(_longitud - largo_oracion+i);
     }
     for(int j=pos; j<_longitud; j++){
         _posiciones_palabras[_texto[j]].insert(j);
     }
-    /*for(set<int>::iterator it = pos; it != _posiciones_palabras.end(); it++){
-
-    }*/
 }
 
 void Editor::borrar_posicion(int pos) {
@@ -145,12 +142,6 @@ void Editor::reemplazar_palabra(const string& palabra1, const string& palabra2) 
         _texto[*it] = palabra2;
         cantidad_reemplazadas++;
     }
-    /*for(int i=0; i<_longitud; i++){
-        if(_texto[i] == palabra1){
-            _texto[i] = palabra2;
-            cantidad_reemplazadas++;
-        }
-    }*/
     if(_conectivos.count(palabra1) == 1 && _conectivos.count(palabra2) == 0){
         _vocabulario.insert(palabra2);
         _cantidad_palabras += cantidad_reemplazadas;
