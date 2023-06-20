@@ -8,6 +8,7 @@ Editor::Editor(const set<string> & conectivos) {
     for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){ //|conectivos| iteraciones
         _conectivos.insert(*it); //O(log n)
     }
+    //_conectivos = conectivos;
     _texto = {}; //O(1)
     _vocabulario = {}; //O(1)
     _cantidad_palabras = 0; //O(1)
@@ -17,143 +18,209 @@ Editor::Editor(const set<string> & conectivos) {
 
 string Editor::texto() const {
     string texto_completo = ""; //O(1)
-    for(int i=0; i<_texto.size()-1; i++){
-        texto_completo.append(_texto[i]);
-        texto_completo.append(" ");
+    for(int i=0; i<_texto.size()-1; i++){ //O(1), |_texto|
+        texto_completo.append(_texto[i]); //O(1)
+        texto_completo.append(" "); //O(1)
     }
-    texto_completo.append(_texto[_texto.size()-1]);
+    texto_completo.append(_texto[_texto.size()-1]); //O(1)
     return texto_completo; //O(1)
 }
+//N = |_texto|
+//Complejidad = O(1) + n * (O(1) + O(1) + O(1)) + O(1) + O(1)
+//            = O(1) + n * ((1) + O(1)
+//            = O(max{O(1), N, O(1)})
+//            = O(N)
+
 
 const set<string>& Editor::vocabulario() const {
     return _vocabulario; //O(1)
 }
+//Complejidad = O(1)
 
 const set<string>& Editor::conectivos() const {
     return _conectivos; //O(1)
 }
+//Complejidad = O(1)
 
 int Editor::conteo_palabras() const { 
 	return _cantidad_palabras; //O(1)
 }
+//Complejidad = O(1)
 
 int Editor::longitud() const { 
 	return _longitud; //O(1)
 }
+//Complejidad = O(1)
+
+vector<string> Editor::separar_oracion(const string& oracion){
+    string palabra = ""; //O(1)
+    vector<string> aux; //O(1)
+    int j = 0; //O(1)
+    while(j<oracion.size()+1){ // O(1), |oracion| iteraciones
+        if(oracion[j] == ' ' || j==oracion.size()){ //O(1)
+            aux.push_back(palabra); //O(1)
+            palabra = ""; //O(1)
+        } else if (oracion[j] != ' ') { //O(1)
+            palabra.push_back(oracion[j]); //O(1)
+        }
+        j++; //O(1)
+    }
+    return aux;
+}
+//Complejidad = O(1) + O(1) + O(1) + |oracion| * (O(1) + O(1) +O(1)) + O(1)
+//            = O(1) + |oracion| * O(1)
+//            = O(1) + O(|oracion|)
+//            = O(max{1, |oracion|})
+//            = O(|oracion|)
 
 void Editor::agregar_atras(const string& oracion) {
     string palabra = ""; //O(1)
     int i=0; //O(1)
-    while(i<oracion.size()+1){ // |oracion| iteraciones
-        if(oracion[i] == ' ' || i==oracion.size()){ //O(1)
-            _texto.push_back(palabra); //O(1)
-            _longitud++; //O(1)
-            if(_conectivos.count(palabra) == 0){ //O(1)
-                _cantidad_palabras++; //O(1)
-                _vocabulario.insert(palabra); //O(log M)
-            }
-            if(_posiciones_palabras.count(palabra) == 1){
-                _posiciones_palabras[palabra].insert(_longitud-1); //O(log P)
-            } else {
-                _posiciones_palabras[palabra] = {_longitud-1}; //O(log P)
-            }
-            palabra = ""; //O(1)
-        } else if (oracion[i] != ' ') {
-            palabra.push_back(oracion[i]); //porque no es append? //O(1)
+    vector<string> oracion_separada = separar_oracion(oracion); //O(|oracion|)
+    for(int i=0; i<oracion_separada.size(); i++){ //O(1), |oracion| iteraciones
+        _texto.push_back(oracion_separada[i]); //O(1)
+        _longitud++; //O(1)
+        if(_conectivos.count(oracion_separada[i]) == 0){ //O(log M)
+            _cantidad_palabras++; //O(1)
+            _vocabulario.insert(oracion_separada[i]); //O(log M)
         }
-        i++; //O(1)
+        if(_posiciones_palabras.count(oracion_separada[i]) == 1){ //O(1)
+            _posiciones_palabras[oracion_separada[i]].insert(_longitud-1); //O(log M)
+        } else {
+            _posiciones_palabras[oracion_separada[i]] = {_longitud-1}; //O(log M)
+        }
     }
 }
-//Complejidad: O(1) + O(1) + |oracion|*(O(1)+O(1)+O(1)+O(log M)+O(log P)+O(1))
-            // = O(1) + |oracion|*(O(1)+O(log M*P)) por regla de logaritmos
-            // = O(max{O(1), |oracion|*(max{O(1), O(log M P)})})
-            // =O(|oracion|*log MP)
-            //CHEQUEAR
+//Complejidad = O(1) + O(1) + |oracion| * (O(1) + O(1) + O(1) + O(log M) + O(1) + O(log M) + O(1) + O(log P) + O(1) + O(1))
+//            = O(1) + |oracion| * O(max{1, log M, log P}) 
+//            = O(1) + |oracion| * O(log M + log P) por regla de logaritmos, log M + log P = log M*P
+//            = O(1) + O(|oracion| * log (M*P))
+//            = O(max{1, |oracion| * log (M*P)})
+//            = O(|oracion| * log (M*P))
 
 const set<int> & Editor::buscar_palabra(const string& palabra) const {
-    //devolver el map que tenga esa palabra
-    return _posiciones_palabras.at(palabra); //O(log M)
+    auto it_posiciones_palabras = _posiciones_palabras.find(palabra); //O(log M)
+    if(it_posiciones_palabras != _posiciones_palabras.end()){ //O(1)
+        return _posiciones_palabras.at(palabra); //O(log M)
+    } else {
+        return set_int_vacio; //O(1)
+    }
 }
+//Complejidad = O(log M) + O(1) + O(log M)
+//            = O(max{log M, 1, log M})
+//            = O(log M)
 
 void Editor::insertar_palabras(const string& oracion, int pos) {
-    int largo_anterior = _longitud; //O(1)
-    agregar_atras(oracion); //O(|oracion|*log MP) //ya modifica lognitud, vocabulario y conteo de palabras
-    int largo_oracion = _longitud - largo_anterior; //O(1)
-    for(int i=0; i<largo_oracion; i++){ //largo_oracion iteraciones
-        _posiciones_palabras[_texto[pos+i]].erase(pos+i);
-        _posiciones_palabras[_texto[_longitud - largo_oracion+i]].erase(_longitud - largo_oracion+i);
-        swap(_texto[pos+i], _texto[_longitud - largo_oracion+i]); //O(1)
-        //_posiciones_palabras[_texto[pos+i]].insert(pos+i);
-        //_posiciones_palabras[_texto[_longitud - largo_oracion+i]].insert(_longitud - largo_oracion+i);
+    //separamos la oracion en palabras
+    vector<string> oracion_separada = separar_oracion(oracion); //O(|oracion|)
+
+    //actualizamos las variables
+    for(int j=0; j<oracion_separada.size(); j++){ //O(1), |oracion_separada| iteraciones
+        _longitud++; //O(1)
+        if(_conectivos.count(oracion_separada[j]) == 0){ //O(1)
+            _cantidad_palabras++; //O(1)
+            _vocabulario.insert(oracion_separada[j]); //O(log M)
+        }
+        if(_posiciones_palabras.count(oracion_separada[j]) == 1){ //O(1)
+            _posiciones_palabras[oracion_separada[j]].insert(pos+j); //O(log P)
+        } else {
+            _posiciones_palabras[oracion_separada[j]] = {pos+j}; //O(log P)
+        }
     }
-    for(int j=pos; j<_longitud; j++){
-        _posiciones_palabras[_texto[j]].insert(j);
+
+    for(int i = pos; i < _texto.size(); i++){ //O(1), |_texto| - pos iteraciones
+        _posiciones_palabras[_texto[i]].erase(i); //O(log M)
+        _posiciones_palabras[_texto[i]].insert(i+oracion_separada.size()); //O(log M)
     }
+
+    _texto.insert(_texto.begin() + pos, oracion_separada.begin(), oracion_separada.end()); ///O(N)
 }
+//Complejidad = O(|oracion|) + |oracion_separada|*(O(1) + O(1) + O(1) + O(log M) + O(1) + O(log P ??????))
+//            = O(|oracion|) + |oracion_separada|*(O(max{1, log (M*P)})
+//            = O(|oracion|) + |oracion_separada|*(O(log (M*P))
+//            = O(|oracion|) + O(|oracion_separada|*log (M*P)
+//            = O(|oracion| + |oracion_separada|*log (M*P))
 
 void Editor::borrar_posicion(int pos) {
-    string palabra = _texto[pos];
-    for(int i=pos; i<_texto.size()-1; i++){
-        swap(_texto[i], _texto[i+1]);
-        
+    string palabra = _texto[pos]; //O(1)
+
+    if(_conectivos.count(palabra) == 0){ //O(log M)
+        _cantidad_palabras = _cantidad_palabras - 1; //O(1)
+        _vocabulario.erase(palabra); //O(log M)
     }
-    _texto.pop_back();
-    _longitud = _longitud - 1;
-    for(int j=0; j<_longitud; j++){
-        for(set<int>::iterator it = _posiciones_palabras[_texto[j]].begin(); it != _posiciones_palabras[_texto[j]].end(); it++){
-            if(*it>pos){
-                int pos_nueva = *it-1;
-                _posiciones_palabras[_texto[j]].erase(*it);
-                _posiciones_palabras[_texto[j]].insert(pos_nueva);
+    _longitud = _longitud - 1; //O(1)
+
+    _texto.erase(_texto.begin() + pos); //O(N)
+
+    _posiciones_palabras[palabra].erase(pos); //O(log M)
+
+    if(_posiciones_palabras[palabra].empty()){ //O(1)
+        _posiciones_palabras.erase(palabra); //(log M)
+        _vocabulario.erase(palabra); //O(log M)
+    }
+
+    for(int j=0; j<_longitud; j++){ //O(1), |_longitud| iteraciones
+        for(set<int>::iterator it = _posiciones_palabras[_texto[j]].begin(); it != _posiciones_palabras[_texto[j]].end(); it++){ //|_posiciones_palabras[_texto[j]]| iteraciones
+            if(*it>pos){ //O(1)
+                int pos_nueva = *it-1; //O(1)
+                _posiciones_palabras[_texto[j]].erase(*it); //O(log M)
+                _posiciones_palabras[_texto[j]].insert(pos_nueva); //O(log M)
             }
         }
     }
-    if(_conectivos.count(palabra) == 0){
-        _cantidad_palabras = _cantidad_palabras - 1;
-        _vocabulario.erase(palabra);
-    }
-    _posiciones_palabras[palabra].erase(pos);
 }
+//Complejidad = O(1) + O(log M) + O(1) + O(log M) + O(1) + O(N) + O(log M) + O(1) + O(log M) + O(log M) + |_longitud| * (O(1) + |_posiciones_palabras[_texto[j]]|*(O(1) + O(1) + O(log M) + O(log M)))
+//            = O(log M + N) + O(|_longitud|*|_posiciones_palabras[_texto[j]]|*log M)
+//            =O(log M + N + |_longitud|*|_posiciones_palabras[_texto[j]]|*log M)
 
 int Editor::borrar_palabra(const string& palabra) {
+    auto it_encontrar_palabra = _posiciones_palabras.find(palabra);
+    if(it_encontrar_palabra == _posiciones_palabras.end()){
+        return 0;
+    }
+
     int cantidad_borradas = 0;
-    for(int i=0; i<_texto.size(); i++){
-        if(_texto[i] == palabra){
-            for(int j=i; j<_texto.size(); j++){
-                swap(_texto[j], _texto[j+1]);
-            }
-            _texto.pop_back();
-            cantidad_borradas++;
-        }
+    vector<int> posiciones_borrar;
+
+    for(auto it_posiciones_borrar = _posiciones_palabras[palabra].begin(); it_posiciones_borrar != _posiciones_palabras[palabra].end(); it_posiciones_borrar++){
+        posiciones_borrar.push_back(*it_posiciones_borrar);
+        cout<<*it_posiciones_borrar<<endl;
     }
-    _vocabulario.erase(palabra);
-    _longitud = _longitud - cantidad_borradas;
-    if(_conectivos.count(palabra) == 0){
-        _cantidad_palabras = _cantidad_palabras - cantidad_borradas;
+
+    for(int i=0; i<posiciones_borrar.size(); i++){
+        cout<<posiciones_borrar[i]<<endl;
+        borrar_posicion(posiciones_borrar[i]);
+        cantidad_borradas++;
+        cout<<cantidad_borradas<<endl;
     }
+
     return cantidad_borradas;
 }
 
 void Editor::reemplazar_palabra(const string& palabra1, const string& palabra2) {
-    int cantidad_reemplazadas = 0;
-    _posiciones_palabras[palabra2] = _posiciones_palabras[palabra1];
-    _posiciones_palabras.erase(palabra1);
-    for(set<int>::iterator it = _posiciones_palabras[palabra2].begin(); it != _posiciones_palabras[palabra2].end(); it++){
-        _texto[*it] = palabra2;
-        cantidad_reemplazadas++;
+    int cantidad_reemplazadas = 0; //O(1)
+    _posiciones_palabras[palabra2] = _posiciones_palabras[palabra1]; //O(1)
+    _posiciones_palabras.erase(palabra1); //O(log M)
+    for(set<int>::iterator it = _posiciones_palabras[palabra2].begin(); it != _posiciones_palabras[palabra2].end(); it++){ // |_posiciones_palabras[palabra2]| iteraciones
+        _texto[*it] = palabra2; //O(1)
+        cantidad_reemplazadas++; //O(1)
     }
-    if(_conectivos.count(palabra1) == 1 && _conectivos.count(palabra2) == 0){
-        _vocabulario.insert(palabra2);
-        _cantidad_palabras += cantidad_reemplazadas;
+    if(_conectivos.count(palabra1) == 1 && _conectivos.count(palabra2) == 0){//O(log M)
+        _vocabulario.insert(palabra2);//O(log M)
+        _cantidad_palabras += cantidad_reemplazadas; //O(1)
     }
-    if(_conectivos.count(palabra1) == 0 && _conectivos.count(palabra2) == 1){
-        _vocabulario.erase(palabra1);
-        _cantidad_palabras -= cantidad_reemplazadas;
+    if(_conectivos.count(palabra1) == 0 && _conectivos.count(palabra2) == 1){//O(log M)
+        _vocabulario.erase(palabra1);//O(log M)
+        _cantidad_palabras -= cantidad_reemplazadas; //O(1)
     }
-    if(_conectivos.count(palabra1) == 0 && _conectivos.count(palabra2) == 0){
-        _vocabulario.erase(palabra1);
-        _vocabulario.insert(palabra2);
+    if(_conectivos.count(palabra1) == 0 && _conectivos.count(palabra2) == 0){ //O(log M)
+        _vocabulario.erase(palabra1);//O(log M)
+        _vocabulario.insert(palabra2); //O(log M)
     }
     
     
 }
+//Complejidad= O(1) + O(1) + O(log M) + |_posiciones_palabras[palabra2]|* (O(1) + O(1)) + O(log M) + O(log M) + O(log M) + O(log M)
+//           = O(max(log M, 1)) + O(|_posiciones_palabras[palabra2]|) + O(log M)
+//           = O(log M) + O(|_posiciones_palabras[palabra2]|) + O(log M)
+//           = O(|_posiciones_palabras[palabra2]|) + O(log M)

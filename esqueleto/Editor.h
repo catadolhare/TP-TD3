@@ -54,6 +54,18 @@ private:
     int _longitud;
     map<string, set<int>> _posiciones_palabras;
 
+    // conjuntos vacíos para devolver por referncia
+    const set<int> set_int_vacio = {};
+    const set<string> set_string_vacio = {};
+
+    vector<string> separar_oracion(const string& oracion);
+
+/*
+    // N: cantidad total de palabras del texto (incluyendo repetidas)
+    // M: cantidad de palabras diferentes del texto (conectivas o no)
+    // cardinal del conjunto de conectivos -> se puede asumir que es constante K
+    // P: cantidad de repeticiones de la palabra más repetida
+
     //Invariante de Representacion:
     //  -_texto son strings solo con letras del alfabeto
     //  -_cantidad_palabras mayor o igual a cero
@@ -66,8 +78,28 @@ private:
     //  -si una palabra esta en _texto, esta en _conectivos o en _vocabulario, no en ambas
     //  -si una palabra esta en _vocabulario, esta en _texto
 
+    Ejemplo que cumple invariante:
+        - _texto = [me, presento, ante, usted]
+        - _conectivos = {me, ante}
+        - _vocabulario = {presento, usted}
+        - _cant_palabras = 2
+        - _longitud = 4
+        - _posiciones_palabras = {[me,{0}], [presento,{1}], [ante,{2}], [usted,{3}]}
+        - set_int_vacio = {};
+        - set_string_vacio = {};
+
+    Ejemplo que no cumple invariante:
+        - _texto = [me, presento, ante, usted]
+        - _conectivos = {me, ante}
+        - _vocabulario = {me, presento, ante, usted}
+        - _cant_palabras = 4
+        - _longitud = 4
+        - _posiciones_palabras = {[me,{0}], [presento,{1}], [ante,{2}], [usted,{3}]}
+        - set_int_vacio = {};
+        - set_string_vacio = {};
 
     //Rep(e:estr) = 
+    // (for all)(int i, j)(0<=i<|e._texto| and 0<=j<=|e._texto[i]|)=>esLetra(e._texto[i][j])
     // e._cantidad_palabras >= 0
     // e._longitud == |_texto|
     // (for all)(int i)(0<=i<|_posiciones_palabras|)=>e._posiciones_palabras.at(i) ∈ e._texto
@@ -78,7 +110,9 @@ private:
     // (for all)(int p)(0<=p<|e._texto|)=>e._texto[p] ∈ e._conectivos ⊻ e._texto[p] ∈ e._vocabulario
     // (for all)(int p)(0<=q<|e._vocabulario|) => e._conectivos[q] ∈ e._texto
 
-    
+    //esLetra(c:char): c es letra del alfabeto
+
+    */
 };
 
 
