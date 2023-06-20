@@ -173,7 +173,7 @@ void Editor::borrar_posicion(int pos) {
 }
 //Complejidad = O(1) + O(log M) + O(1) + O(log M) + O(1) + O(N) + O(log M) + O(1) + O(log M) + O(log M) + N * (O(1) + P*(O(1) + O(1) + O(log M) + O(log M)))
 //            = O(log M + N) + O(N*P*log M)
-//            = O(log M + N + N*P*log M)
+//            = O(log M + N + N*P*log M) -> no se si se puede seguir simplificando
 //            = O(log M + N*(1+P log M)) sacando factor comun N
 //            = O(log M + N*(max{1+P log M}))
 //            = O(log M + N P log M))
@@ -195,7 +195,7 @@ int Editor::borrar_palabra(const string& palabra) {
         cout<<*it_posiciones_borrar<<endl;
     }
 
-    for(int i=0; i<posiciones_borrar.size(); i++){
+    for(int i=posiciones_borrar.size()-1; i>=0; i--){
         cout<<posiciones_borrar[i]<<endl;
         borrar_posicion(posiciones_borrar[i]);
         cantidad_borradas++;
