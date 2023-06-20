@@ -5,16 +5,16 @@ using namespace std;
 using std::string;
 
 Editor::Editor(const set<string> & conectivos) {
-    for(set<string>::iterator it=conectivos.begin(); it != conectivos.end(); it++){ //|conectivos| iteraciones
-        _conectivos.insert(*it); //O(log n)
-    }
-    //_conectivos = conectivos;
+    _conectivos = conectivos; //O(|conectivos|)
     _texto = {}; //O(1)
     _vocabulario = {}; //O(1)
     _cantidad_palabras = 0; //O(1)
     _longitud = 0; //O(1)
     _posiciones_palabras = {}; //O(1)
 }
+//Complejidad = O(|conectivos|) + O(1) + O(1) + O(1) + O(1) + O(1)
+//            = O(max{|conectivos|, 1})
+//            = O(|conectivos|)
 
 string Editor::texto() const {
     string texto_completo = ""; //O(1)
