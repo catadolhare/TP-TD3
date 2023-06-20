@@ -199,12 +199,20 @@ int Editor::borrar_palabra(const string& palabra) {
 
 void Editor::reemplazar_palabra(const string& palabra1, const string& palabra2) {
     int cantidad_reemplazadas = 0; //O(1)
-    _posiciones_palabras[palabra2] = _posiciones_palabras[palabra1]; //O(1)
-    _posiciones_palabras.erase(palabra1); //O(log M)
-    for(set<int>::iterator it = _posiciones_palabras[palabra2].begin(); it != _posiciones_palabras[palabra2].end(); it++){ // |_posiciones_palabras[palabra2]| iteraciones
+
+    for(set<int>::iterator it = _posiciones_palabras[palabra1].begin(); it != _posiciones_palabras[palabra1].end(); it++){ // P iteraciones
         _texto[*it] = palabra2; //O(1)
         cantidad_reemplazadas++; //O(1)
+        if(_posiciones_palabras.count(palabra2) == 1){ //O(log P)
+            _posiciones_palabras[palabra2].insert(*it); //O(log P)
+        } else {
+            _posiciones_palabras[palabra2] = {*it}; //O(log P)
+        }
     }
+    if(_posiciones_palabras[palabra1].empty()){ //O(1)
+        _posiciones_palabras.erase(palabra1); //O(log M)
+    }
+    
     if(_conectivos.count(palabra1) == 1 && _conectivos.count(palabra2) == 0){//O(log M)
         _vocabulario.insert(palabra2);//O(log M)
         _cantidad_palabras += cantidad_reemplazadas; //O(1)
@@ -217,10 +225,9 @@ void Editor::reemplazar_palabra(const string& palabra1, const string& palabra2) 
         _vocabulario.erase(palabra1);//O(log M)
         _vocabulario.insert(palabra2); //O(log M)
     }
-    
-    
 }
-//Complejidad= O(1) + O(1) + O(log M) + |_posiciones_palabras[palabra2]|* (O(1) + O(1)) + O(log M) + O(log M) + O(log M) + O(log M)
-//           = O(max(log M, 1)) + O(|_posiciones_palabras[palabra2]|) + O(log M)
-//           = O(log M) + O(|_posiciones_palabras[palabra2]|) + O(log M)
-//           = O(|_posiciones_palabras[palabra2]|) + O(log M)
+//Complejidad= O(1) + P*(O(1) + O(1) + O(log P) + O(log P)) + O(1) + O(log M) + O(log M) + O(log M) + O(log M) + O(log M)
+//           = O(1) + P*(O(max{1, log P})) + O(max{1, log M})
+//           = O(1) + P*O(log P) + O(log M)
+//           = O(max{1, P log P, log M})
+//           = O(P log P + log M)
