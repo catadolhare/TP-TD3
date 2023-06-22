@@ -100,7 +100,7 @@ private:
     // e._longitud == |_texto|
     // (for all)(string s)(s ∈ claves(e._posiciones_palabras))=> s ∈ e._texto
     // (for all)(int j)(0<=j<|_texto|) => e._texto[j] ∈ claves(e._posiciones_palabras)
-    // (for all)(int k, l)(0<=k<|_texto| and 0<=l<|e._posiciones_palabras[k]) => 0<=e._posiciones_palabras[k][l]<=_longitud-1
+    // (for all)(int k, l)(0<=k<|_texto| and l ∈ e._posiciones_palabras[k]) => 0<=l<=_longitud-1
     // (for all)(string m)(m ∈ |e._vocabulario|)=> m ∉ e._conectivos
     // (for all)(string n)(n ∈ |e._conectivos|)=> n ∉ e._vocabulario
     // (for all)(int p)(0<=p<|e._texto|)=>e._texto[p] ∈ e._conectivos ⊻ e._texto[p] ∈ e._vocabulario
